@@ -5,7 +5,6 @@ public interface LoginView {
     void hideProgress();
 
     void onError(String error);
-    void checkAuth();
     void getToken(String token);
     void navigateToNewsScreen();
 

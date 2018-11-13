@@ -1,11 +1,12 @@
 package com.github.vasiliz.customvkclient.login.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -13,8 +14,10 @@ import android.widget.Toast;
 
 import com.github.vasiliz.customvkclient.CustomVkClient;
 import com.github.vasiliz.customvkclient.R;
+import com.github.vasiliz.customvkclient.commons.Strings;
 import com.github.vasiliz.customvkclient.login.LoginPresenter;
 import com.github.vasiliz.customvkclient.login.libs.di.LoginComponent;
+import com.github.vasiliz.customvkclient.news.ui.NewsActivity;
 
 import javax.inject.Inject;
 
@@ -27,19 +30,25 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     WebView mWebView;
     @BindView(R.id.main_progressbar)
     ProgressBar mLoginProgress;
+    private SharedPreferences mSharedPreferences;
 
     @Inject
     LoginPresenter mLoginPresenter;
     private static final String AUTH_URL = "https://oauth.vk.com/authorize?client_id=6745673&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=wall,video,friends,messages ,offline&response_type=token&v=5.68&state=123456";
     public static final String URL_GET_ACCESS_TOKEN = "https://oauth.vk.com/blank.html#access_token=";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setupInjection();
-
-        init();
+        if (checkAuthVK()) {
+            navigateToNewsScreen();
+        } else {
+            init();
+            navigateToNewsScreen();
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -74,20 +83,17 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     @Override
-    public void checkAuth() {
-
-    }
-
-    @Override
-    public void getToken(String token) {
-        String sevr = token;
-        Log.d("tokenVK", sevr);
-
+    public void getToken(String pToken) {
+        saveToken(pToken);
     }
 
     @Override
     public void navigateToNewsScreen() {
-
+        Intent intent = new Intent(this, NewsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     @Override
@@ -108,14 +114,26 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         mLoginPresenter.onResume();
     }
 
-    private class CustomWebViewClient extends WebViewClient{
+    private class CustomWebViewClient extends WebViewClient {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (url.contains(URL_GET_ACCESS_TOKEN)){
+            if (url.contains(URL_GET_ACCESS_TOKEN)) {
                 mLoginPresenter.getLoginToken(url);
             }
             return false;
         }
+    }
+
+    private void saveToken(String pToken) {
+        final SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(Strings.APP_TOKEN_NAME, pToken);
+        editor.apply();
+    }
+
+    private boolean checkAuthVK() {
+        final SharedPreferences sharedPreferences = getSharedPreferences(Strings.APP_TOKEN_NAME, MODE_PRIVATE);
+        return sharedPreferences.getString(Strings.APP_TOKEN_NAME, "") != null;
+
     }
 }

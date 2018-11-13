@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+        <item
+
+            android:enabled="true"
+            android:id="@+id/news_item"
+            android:title=""
+            android:color="#6200ee"
+            android:icon="@drawable/ic_news"
+            app:showAsAction="ifRoom"/>
+        <item
+            android:enabled="true"
+            android:id="@+id/search_item"
+            android:title=""
+            android:icon="@drawable/ic_search"
+            app:showAsAction="ifRoom"/>
+        <item
+            android:enabled="true"
+            android:id="@+id/message_item"
+            android:title=""
+            android:icon="@drawable/ic_message"
+            app:showAsAction="ifRoom"/>
+        <item
+            android:enabled="true"
+            android:id="@+id/notification_item"
+            android:title=""
+            android:icon="@drawable/ic_notification"
+            app:showAsAction="ifRoom"/>
+        <item
+            android:enabled="true"
+            android:id="@+id/info_item"
+            android:title=""
+            android:icon="@drawable/ic_info"
+            app:showAsAction="ifRoom"/>
+
+
+</menu>

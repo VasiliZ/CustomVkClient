@@ -1,5 +1,6 @@
 package com.github.vasiliz.customvkclient.lib.di;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;

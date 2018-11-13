@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -31,11 +32,12 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @BindView(R.id.main_progressbar)
     ProgressBar mLoginProgress;
     private SharedPreferences mSharedPreferences;
+    private String mToken;
 
     @Inject
     LoginPresenter mLoginPresenter;
     private static final String AUTH_URL = "https://oauth.vk.com/authorize?client_id=6745673&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=wall,video,friends,messages ,offline&response_type=token&v=5.68&state=123456";
-    public static final String URL_GET_ACCESS_TOKEN = "https://oauth.vk.com/blank.html#access_token=";
+    public static final String URL_GET_ACCESS_TOKEN = "access_token=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +45,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setupInjection();
+        mSharedPreferences = getSharedPreferences(Strings.APP_PREFERENCES, MODE_PRIVATE);
         if (checkAuthVK()) {
             navigateToNewsScreen();
         } else {
             init();
-            navigateToNewsScreen();
         }
     }
 
@@ -126,6 +128,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     private void saveToken(String pToken) {
+        mToken = pToken;
         final SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(Strings.APP_TOKEN_NAME, pToken);
         editor.apply();
@@ -133,7 +136,8 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     private boolean checkAuthVK() {
         final SharedPreferences sharedPreferences = getSharedPreferences(Strings.APP_TOKEN_NAME, MODE_PRIVATE);
-        return sharedPreferences.getString(Strings.APP_TOKEN_NAME, "") != null;
+        Log.d("tokenVK", sharedPreferences.getString(Strings.APP_TOKEN_NAME, ""));
+        return sharedPreferences.getString(Strings.APP_TOKEN_NAME, "").equals(mToken);
 
     }
 }

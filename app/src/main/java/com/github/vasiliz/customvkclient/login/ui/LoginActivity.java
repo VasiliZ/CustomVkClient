@@ -1,7 +1,6 @@
 package com.github.vasiliz.customvkclient.login.ui;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,10 +14,10 @@ import android.widget.Toast;
 
 import com.github.vasiliz.customvkclient.CustomVkClient;
 import com.github.vasiliz.customvkclient.R;
+import com.github.vasiliz.customvkclient.SwitchTabs;
 import com.github.vasiliz.customvkclient.commons.Strings;
 import com.github.vasiliz.customvkclient.login.LoginPresenter;
 import com.github.vasiliz.customvkclient.login.libs.di.LoginComponent;
-import com.github.vasiliz.customvkclient.news.ui.NewsActivity;
 
 import javax.inject.Inject;
 
@@ -90,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
 
     @Override
     public void navigateToNewsScreen() {
-        Intent intent = new Intent(this, NewsActivity.class);
+        Intent intent = new Intent(this, SwitchTabs.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);

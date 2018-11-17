@@ -1,8 +1,7 @@
 package com.github.vasiliz.customvkclient.news.di;
 
-import android.support.v4.widget.SwipeRefreshLayout;
-
 import com.github.vasiliz.customvkclient.api.NewsApiClient;
+import com.github.vasiliz.customvkclient.entities.Items;
 import com.github.vasiliz.customvkclient.lib.base.EventBus;
 import com.github.vasiliz.customvkclient.lib.base.ImageLoader;
 import com.github.vasiliz.customvkclient.news.NewsInteractor;
@@ -13,7 +12,6 @@ import com.github.vasiliz.customvkclient.news.NewsRepository;
 import com.github.vasiliz.customvkclient.news.NewsRepositoryImpl;
 import com.github.vasiliz.customvkclient.news.adapters.NewsAdapter;
 import com.github.vasiliz.customvkclient.news.adapters.OnItemClickListener;
-import com.github.vasiliz.customvkclient.entities.Items;
 import com.github.vasiliz.customvkclient.news.ui.NewsView;
 
 import java.util.ArrayList;
@@ -29,7 +27,6 @@ public class NewsModule {
 
     private NewsView mNewsView;
     private OnItemClickListener mOnItemClickListener;
-    private SwipeRefreshLayout.OnRefreshListener mSwipeRefreshLayout;
 
     public NewsModule(NewsView pNewsView, OnItemClickListener pOnItemClickListener) {
         mNewsView = pNewsView;
@@ -67,8 +64,8 @@ public class NewsModule {
 
     @Singleton
     @Provides
-    NewsAdapter providesNewsAdapter(List<Items> pItemsList, OnItemClickListener pOnItemClickListener, ImageLoader pImageLoader){
-        return new NewsAdapter(pItemsList, pOnItemClickListener, pImageLoader);
+    NewsAdapter providesNewsAdapter(List<Items> pItemsList, OnItemClickListener pOnItemClickListener){
+        return new NewsAdapter(pItemsList, pOnItemClickListener);
     }
 
     @Singleton
@@ -79,7 +76,7 @@ public class NewsModule {
 
     @Singleton
     @Provides
-    List<Items> privideItemsList(){
+    List<Items> provideItemsList(){
         return new ArrayList<>();
     }
 

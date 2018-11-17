@@ -38,10 +38,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private Context mContext;
     private static final String TYPE_NEWS = "post";
 
-    public NewsAdapter(final List<Items> pNewItems, final OnItemClickListener pOnItemClickListener, final ImageLoader pImageLoader) {
+    public NewsAdapter(final List<Items> pNewItems, final OnItemClickListener pOnItemClickListener) {
         newItems = pNewItems;
         mOnItemClickListener = pOnItemClickListener;
-        mImageLoader = pImageLoader;
     }
 
     @NonNull

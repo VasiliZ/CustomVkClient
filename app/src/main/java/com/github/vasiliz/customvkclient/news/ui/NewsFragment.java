@@ -2,14 +2,16 @@ package com.github.vasiliz.customvkclient.news.ui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -27,10 +29,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NewsActivity extends AppCompatActivity implements NewsView, OnItemClickListener {
+public class NewsFragment extends Fragment implements NewsView, OnItemClickListener {
 
-    @BindView(R.id.navigation_view)
-    BottomNavigationView mBottomNavigationView;
     @BindView(R.id.news_items)
     RecyclerView mContentNews;
     @BindView(R.id.news_progress_ber)
@@ -43,14 +43,16 @@ public class NewsActivity extends AppCompatActivity implements NewsView, OnItemC
     NewsAdapter mNewsAdapter;
     private SharedPreferences mSharedPreferences;
 
+    public NewsFragment() {
+    }
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.news_container);
-        ButterKnife.bind(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.news_container,container,false);
+        ButterKnife.bind(this, view);
         setUpInjection();
         setUpRecyclerView();
-        mSharedPreferences = getSharedPreferences(Strings.APP_PREFERENCES, MODE_PRIVATE);
+        mSharedPreferences = getActivity().getSharedPreferences(Strings.APP_PREFERENCES, getActivity().MODE_PRIVATE);
         mNewsPresenter.getNews();
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
@@ -59,16 +61,18 @@ public class NewsActivity extends AppCompatActivity implements NewsView, OnItemC
                 mNewsPresenter.getNews();
             }
         });
+        return view;
     }
 
+
     private void setUpInjection() {
-        CustomVkClient customVkClient = (CustomVkClient) getApplication();
-        NewsComponent newsComponent = customVkClient.getNewsComponent(this, this, this);
+        CustomVkClient customVkClient = (CustomVkClient) getActivity().getApplication();
+        NewsComponent newsComponent = customVkClient.getNewsComponent( this, this);
         newsComponent.inject(this);
     }
 
     private void setUpRecyclerView() {
-        mContentNews.setLayoutManager(new LinearLayoutManager(this));
+        mContentNews.setLayoutManager(new LinearLayoutManager(getActivity()));
         mContentNews.setRecycledViewPool(new RecyclerView.RecycledViewPool());
         mContentNews.setAdapter(mNewsAdapter);
     }
@@ -110,7 +114,7 @@ public class NewsActivity extends AppCompatActivity implements NewsView, OnItemC
 
     @Override
     public void onError(String pError) {
-        Toast.makeText(this, pError, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), pError, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -123,20 +127,22 @@ public class NewsActivity extends AppCompatActivity implements NewsView, OnItemC
         Log.d("COUNT ITEM", String.valueOf(pOwnerId) + " " + pPostId);
     }
 
+
+
     @Override
-    protected void onPause() {
+    public void onPause() {
         mNewsPresenter.onPause();
         super.onPause();
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         mNewsPresenter.onDestroy();
         super.onDestroy();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         mNewsPresenter.onResume();
         super.onResume();
     }

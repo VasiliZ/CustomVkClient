@@ -1,10 +1,7 @@
 package com.github.vasiliz.customvkclient.lib.di;
 
-import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.github.vasiliz.customvkclient.lib.base.ImageLoader;
 import com.github.vasiliz.customvkclient.login.libs.GlideImageLoader;
 import com.github.vasiliz.customvkclient.login.libs.GreenRobotEventBus;
@@ -35,12 +32,6 @@ public class LibsModule {
     @Singleton
     EventBus provideLibryaryEventBus() {
         return EventBus.getDefault();
-    }
-
-    @Provides
-    @Singleton
-    ImageLoader providesImageLoader(AppCompatActivity pAppCompatActivity) {
-        return new GlideImageLoader(pAppCompatActivity);
     }
 
     @Provides

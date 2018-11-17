@@ -51,7 +51,6 @@ public class LoginPresenterImpl implements LoginPresenter {
                 mLoginView.onError(error);
             } else {
                 mLoginView.getToken(pLoginEvent.getResponse());
-                mLoginView.navigateToNewsScreen();
             }
         }
 

@@ -32,11 +32,10 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @BindView(R.id.main_progressbar)
     ProgressBar mLoginProgress;
     private SharedPreferences mSharedPreferences;
-    private String mToken;
 
     @Inject
     LoginPresenter mLoginPresenter;
-    private static final String AUTH_URL = "https://oauth.vk.com/authorize?client_id=6745673&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=wall,video,friends,messages ,offline&response_type=token&v=5.68&state=123456";
+    private static final String AUTH_URL = "https://oauth.vk.com/authorize?client_id=6745673&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=wall,video,friends,messages,photos,offline&response_type=token&v=5.68&state=123456";
     public static final String URL_GET_ACCESS_TOKEN = "access_token=";
 
     @Override
@@ -128,16 +127,19 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     private void saveToken(String pToken) {
-        mToken = pToken;
         final SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(Strings.APP_TOKEN_NAME, pToken);
         editor.apply();
+        navigateToNewsScreen();
     }
 
     private boolean checkAuthVK() {
-        final SharedPreferences sharedPreferences = getSharedPreferences(Strings.APP_TOKEN_NAME, MODE_PRIVATE);
-        Log.d("tokenVK", sharedPreferences.getString(Strings.APP_TOKEN_NAME, ""));
-        return sharedPreferences.getString(Strings.APP_TOKEN_NAME, "").equals(mToken);
+
+        final String sharedPreferences = mSharedPreferences.getString(Strings.APP_TOKEN_NAME, "");
+        Log.d("tokenVK", sharedPreferences);
+        return !sharedPreferences.equals("");
 
     }
+
 }
+

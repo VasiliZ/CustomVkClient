@@ -2,18 +2,17 @@ package com.github.vasiliz.customvkclient.login;
 
 import android.net.Uri;
 
-import com.github.vasiliz.customvkclient.login.api.LoginClient;
 import com.github.vasiliz.customvkclient.lib.base.EventBus;
 import com.github.vasiliz.customvkclient.login.events.LoginEvent;
 
 public class LoginRepositoryImpl implements LoginRepository {
 
     private EventBus mEventBus;
-    private LoginClient mLoginClient;
 
-    public LoginRepositoryImpl(EventBus pEventBus, LoginClient pLoginClient) {
+
+    public LoginRepositoryImpl(EventBus pEventBus) {
         mEventBus = pEventBus;
-        mLoginClient = pLoginClient;
+
     }
 
     @Override

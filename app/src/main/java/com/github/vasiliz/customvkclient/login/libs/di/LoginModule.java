@@ -7,10 +7,7 @@ import com.github.vasiliz.customvkclient.login.LoginPresenter;
 import com.github.vasiliz.customvkclient.login.LoginPresenterImpl;
 import com.github.vasiliz.customvkclient.login.LoginRepository;
 import com.github.vasiliz.customvkclient.login.LoginRepositoryImpl;
-import com.github.vasiliz.customvkclient.login.api.LoginClient;
 import com.github.vasiliz.customvkclient.login.ui.LoginView;
-
-import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Singleton;
 
@@ -47,14 +44,9 @@ public class LoginModule {
 
     @Provides
     @Singleton
-    LoginRepository providesLoginRepository(EventBus pEventBus, LoginClient pLoginClient){
-        return new LoginRepositoryImpl(pEventBus, pLoginClient);
+    LoginRepository providesLoginRepository(EventBus pEventBus){
+        return new LoginRepositoryImpl(pEventBus);
     }
 
-    @Provides
-    @Singleton
-    LoginClient providesLoginClient(){
-        return new LoginClient();
-    }
 
 }

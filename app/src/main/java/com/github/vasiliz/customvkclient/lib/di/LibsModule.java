@@ -33,25 +33,19 @@ public class LibsModule {
 
     @Provides
     @Singleton
-    EventBus provideLibryaryEventBus(){
+    EventBus provideLibryaryEventBus() {
         return EventBus.getDefault();
     }
 
     @Provides
     @Singleton
-    ImageLoader providesImageLoader(RequestManager pRequestManager){
-        return new GlideImageLoader(pRequestManager);
+    ImageLoader providesImageLoader(AppCompatActivity pAppCompatActivity) {
+        return new GlideImageLoader(pAppCompatActivity);
     }
 
     @Provides
     @Singleton
-    RequestManager providesRequestManager(){
-        return Glide.with(this.mAppCompatActivity);
-    }
-
-    @Provides
-    @Singleton
-    AppCompatActivity providesActivity(){
+    AppCompatActivity providesActivity() {
         return this.mAppCompatActivity;
     }
 }

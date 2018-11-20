@@ -17,8 +17,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".news.ui.NewsFragment"/>
         <activity android:name=".SwitchTabs"/>
+        <activity android:name=".post.ui.PostActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

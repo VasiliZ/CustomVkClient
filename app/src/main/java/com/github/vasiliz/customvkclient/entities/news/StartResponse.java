@@ -1,4 +1,4 @@
-package com.github.vasiliz.customvkclient.entities;
+package com.github.vasiliz.customvkclient.entities.news;
 
 import com.google.gson.annotations.SerializedName;
 

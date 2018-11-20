@@ -13,137 +13,131 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.vasiliz.customvkclient.R;
-import com.github.vasiliz.customvkclient.entities.Attachment;
-import com.github.vasiliz.customvkclient.entities.Group;
-import com.github.vasiliz.customvkclient.entities.Items;
-import com.github.vasiliz.customvkclient.entities.Profile;
-import com.github.vasiliz.customvkclient.entities.ResponseNews;
-import com.github.vasiliz.customvkclient.lib.base.ImageLoader;
+import com.github.vasiliz.customvkclient.entities.news.ArraysItems;
+import com.github.vasiliz.customvkclient.entities.news.Attachment;
+import com.github.vasiliz.customvkclient.entities.news.Group;
+import com.github.vasiliz.customvkclient.entities.news.Item;
+import com.github.vasiliz.customvkclient.entities.news.Profile;
+import com.github.vasiliz.customvkclient.entities.news.ResponseNews;
 import com.github.vasiliz.customvkclient.login.libs.GlideApp;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
 
-    private List<Items> newItems;
+    private List<Item> mNewItems;
     private static final String TAG = NewsAdapter.class.getSimpleName();
     private OnItemClickListener mOnItemClickListener;
-    private ImageLoader mImageLoader;
     private ResponseNews mResponseNews;
     private Context mContext;
-    private static final String TYPE_NEWS = "post";
+    private ArraysItems mArraysItems;
 
-    public NewsAdapter(final List<Items> pNewItems, final OnItemClickListener pOnItemClickListener) {
-        newItems = pNewItems;
+    public NewsAdapter(final List<Item> pNewItems, final OnItemClickListener pOnItemClickListener) {
+        mNewItems = pNewItems;
         mOnItemClickListener = pOnItemClickListener;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup pViewGroup, final int pI) {
+    public NewsHolder onCreateViewHolder(@NonNull final ViewGroup pViewGroup, final int pI) {
         mContext = pViewGroup.getContext();
         final View view = LayoutInflater.from(pViewGroup.getContext()).inflate(R.layout.item_news, pViewGroup, false);
-        return new ViewHolder(view, pViewGroup.getContext());
+        return new NewsHolder(view, pViewGroup.getContext());
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder pViewHolder, final int pI) {
-        switch (getItemViewType(pI)) {
-            case 0:
-                try {
-                    Log.d(TAG, newItems.get(pI).getType());
-                    final Group group;
-                    final Profile profile;
-                    if (findGroupSender(mResponseNews, pI) != null) {
+    public void onBindViewHolder(@NonNull final NewsHolder pNewsHolder, final int pI) {
+        Item item = mNewItems.get(pI);
+        try {
+            mArraysItems = new ArraysItems();
+            Log.d(TAG, item.getType());
+            final Group group;
+            final Profile profile;
 
-                        group = findGroupSender(mResponseNews, pI);
-                        pViewHolder.mProfileName.setText(group.getNameGroup());
-                        Log.d(TAG, group.getNameGroup());
-                        GlideApp.with(mContext)
-                                .load(group.getUrlGroupPhoto100())
-                                .into(pViewHolder.mProfilePhoto);
-                    } else {
-                        profile = findUserSender(mResponseNews, pI);
-                        pViewHolder.mProfileName.setText(profile.getFirstName() + " " + profile.getLastName());
-                        Log.d(TAG, profile.getFirstName() + " " + profile.getLastName());
-                        GlideApp.with(mContext)
-                                .load(profile.getUrlPhoto100())
-                                .into(pViewHolder.mProfilePhoto);
+            if (findGroupSender(mResponseNews, pI) != null) {
+
+                group = findGroupSender(mResponseNews, pI);
+                pNewsHolder.mProfileName.setText(group.getNameGroup());
+                Log.d(TAG, group.getNameGroup());
+                GlideApp.with(mContext)
+                        .load(group.getUrlGroupPhoto100())
+                        .into(pNewsHolder.mProfilePhoto);
+            } else {
+                profile = findUserSender(mResponseNews, pI);
+                pNewsHolder.mProfileName.setText(profile.getFirstName() + " " + profile.getLastName());
+                Log.d(TAG, profile.getFirstName() + " " + profile.getLastName());
+                GlideApp.with(mContext)
+                        .load(profile.getUrlPhoto100())
+                        .into(pNewsHolder.mProfilePhoto);
+            }
+            //like
+            if (item.getLikes().getUserLike() == 1) {
+                pNewsHolder.mLikeImage.setImageResource(R.drawable.liked_image);
+            }
+            pNewsHolder.mCountLike.setText(String.valueOf(item.getLikes().getCountLike()));
+
+            //text news
+            Log.d(TAG, item.getText());
+            if (!item.getText().isEmpty()) {
+                pNewsHolder.mTextNews.setVisibility(View.VISIBLE);
+                pNewsHolder.mTextNews.setText(String.valueOf(item.getText()));
+            } else {
+                pNewsHolder.mTextNews.setVisibility(View.GONE);
+            }
+
+            //comments
+            Log.d(TAG, String.valueOf(item.getComments().getCanPost()));
+            if (item.getComments().getCanPost() == 0) {
+                pNewsHolder.mCommentsContainer.setVisibility(View.GONE);
+            }
+            pNewsHolder.mCountComments.setText(String.valueOf(item.getComments().getCountComments()));
+
+            //repost
+            pNewsHolder.mCountRepost.setText(String.valueOf(item.getReposts().getCountReposts()));
+            pNewsHolder.setOnClickListener(item);
+            //attachment content
+            if (item.getAttachments() != null) {
+                if (!item.getAttachments().isEmpty()) {
+                    for (int i = 0; i < item.getAttachments().size(); i++) {
+                        mArraysItems.setItem(item.getAttachments().get(i));
                     }
+                    Log.d(TAG + "1", String.valueOf(mArraysItems.getAttach().size()));
 
-                    //attachment content
-                    if (!newItems.get(pI).getAttachments().isEmpty()) {
-                        pViewHolder.mAttachmentsContainer.setVisibility(View.VISIBLE);
-                        pViewHolder.setItems(newItems.get(pI).getAttachments());
-                    } else {
-                        pViewHolder.mAttachmentsContainer.setVisibility(View.GONE);
-                    }
 
-                    //like
-                    if (newItems.get(pI).getLikes().getUserLike() == 1) {
-                        pViewHolder.mLikeImage.setImageResource(R.drawable.liked_image);
-                    }
-                    Log.d(TAG, newItems.get(pI).getText());
-                    if (!newItems.get(pI).getText().isEmpty()) {
-                        pViewHolder.mTextNews.setVisibility(View.VISIBLE);
-                        pViewHolder.mTextNews.setText(String.valueOf(newItems.get(pI).getText()));
-                    } else {
-                        pViewHolder.mTextNews.setVisibility(View.GONE);
-                    }
+                    pNewsHolder.mAttachmentsContainer.setVisibility(View.VISIBLE);
+                    mArraysItems.endOnStruct();
+                    pNewsHolder.setItems(mArraysItems.getAttach());
 
-                    pViewHolder.mCountLike.setText(String.valueOf(newItems.get(pI).getLikes().getCountLike()));
-
-                    //comments
-                    if (newItems.get(pI).getComments().getCanPost() == 0) {
-                        pViewHolder.mCommentsContainer.setVisibility(View.GONE);
-                    }
-                    pViewHolder.mCountComments.setText(String.valueOf(newItems.get(pI).getComments().getCountComments()));
-
-                    //repost
-                    pViewHolder.mCountRepost.setText(String.valueOf(newItems.get(pI).getReposts().getCountReposts()));
-                    pViewHolder.setOnClickListener(newItems.get(pI).getSourseId(), newItems.get(pI).getPostId());
-
-                } catch (NullPointerException pE) {
-                    pE.getLocalizedMessage();
                 }
-                default:
-                   break;
 
-        }
-
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        switch (newItems.get(position).getType()) {
-            case TYPE_NEWS:
-                return 0;
-            default:
-                return 1;
+            } else {
+                pNewsHolder.mAttachmentsContainer.setVisibility(View.GONE);
+            }
+        } catch (final NullPointerException pE) {
+            pE.getLocalizedMessage();
         }
     }
 
     @Override
     public int getItemCount() {
-        return newItems.size();
+        return mNewItems.size();
     }
 
     public void setItems(final ResponseNews pResponseNews) {
         mResponseNews = pResponseNews;
-        newItems.clear();
-        newItems.addAll(pResponseNews.getItemsList());
+        mNewItems.clear();
+        mNewItems.addAll(pResponseNews.getItemList());
         notifyDataSetChanged();
     }
 
     private Group findGroupSender(final ResponseNews pNews, final int pPosition) {
         for (final Group groups : pNews.getGroupList()) {
 
-            if (groups.getId() == newItems.get(pPosition).getSourseId() * -1) {
+            if (groups.getId() == mNewItems.get(pPosition).getSourseId() * -1) {
                 Log.d(TAG, String.valueOf(groups.getId()));
                 return groups;
             }
@@ -153,7 +147,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private Profile findUserSender(final ResponseNews pNews, final int pPosition) {
         for (final Profile profile : pNews.getProfileList()) {
-            if (profile.getId() == newItems.get(pPosition).getSourseId()) {
+            if (profile.getId() == mNewItems.get(pPosition).getSourseId()) {
                 Log.d(TAG, String.valueOf(profile.getId()));
                 return profile;
             }
@@ -161,7 +155,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         return null;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class NewsHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.profile_photo)
         CircleImageView mProfilePhoto;
@@ -186,37 +180,33 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         @BindView(R.id.attachments_container)
         RecyclerView mAttachmentsContainer;
         private View mView;
-        private List<Attachment> mAttachments;
         private AttachmentsAdapter mAttachmentsAdapter;
 
-        public ViewHolder(@NonNull final View itemView, final Context pContext) {
+        public NewsHolder(@NonNull final View itemView, final Context pContext) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             mView = itemView;
-            mAttachmentsContainer.setHasFixedSize(true);
-            mAttachments = new ArrayList<>();
-            mAttachmentsAdapter = new AttachmentsAdapter(mAttachments, mImageLoader);
+            mAttachmentsAdapter = new AttachmentsAdapter();
             final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(pContext);
-            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             mAttachmentsContainer.setLayoutManager(linearLayoutManager);
             mAttachmentsContainer.setAdapter(mAttachmentsAdapter);
 
         }
 
-        public void setItems(final List<Attachment> pItems) {
-            mAttachments.clear();
+        public void setItems(final List<List<Attachment>> pItems) {
             if (pItems != null) {
-                mAttachments.addAll(pItems);
-                mAttachmentsAdapter.notifyDataSetChanged();
+
+                mAttachmentsAdapter.setItems(pItems);
             }
         }
 
-        public void setOnClickListener(final int pIdOwner, final int pPostId) {
+        public void setOnClickListener(final Item pItem) {
             mCommentsContainer.setOnClickListener(new View.OnClickListener() {
 
                 @Override
-                public void onClick(View v) {
-                    mOnItemClickListener.onItemClick(pIdOwner, pPostId);
+                public void onClick(final View v) {
+                    mOnItemClickListener.onItemClick(pItem);
                 }
             });
 
@@ -224,7 +214,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     @Override
-    public void onViewRecycled(@NonNull ViewHolder holder) {
+    public void onViewRecycled(@NonNull final NewsHolder holder) {
         super.onViewRecycled(holder);
     }
 }

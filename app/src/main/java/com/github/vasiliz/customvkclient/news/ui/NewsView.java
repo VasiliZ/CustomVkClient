@@ -1,8 +1,6 @@
 package com.github.vasiliz.customvkclient.news.ui;
 
-import com.github.vasiliz.customvkclient.entities.ResponseNews;
-
-import java.util.List;
+import com.github.vasiliz.customvkclient.entities.news.ResponseNews;
 
 public interface NewsView {
     void showNews();

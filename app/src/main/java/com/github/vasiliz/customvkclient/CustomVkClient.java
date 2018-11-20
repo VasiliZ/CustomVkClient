@@ -14,6 +14,11 @@ import com.github.vasiliz.customvkclient.news.di.DaggerNewsComponent;
 import com.github.vasiliz.customvkclient.news.di.NewsComponent;
 import com.github.vasiliz.customvkclient.news.di.NewsModule;
 import com.github.vasiliz.customvkclient.news.ui.NewsView;
+import com.github.vasiliz.customvkclient.post.di.DaggerPostComponent;
+import com.github.vasiliz.customvkclient.post.di.PostComponent;
+import com.github.vasiliz.customvkclient.post.di.PostModule;
+import com.github.vasiliz.customvkclient.post.ui.PostActivity;
+import com.github.vasiliz.customvkclient.post.ui.PostView;
 
 public class CustomVkClient extends Application {
 
@@ -32,6 +37,12 @@ public class CustomVkClient extends Application {
         return DaggerNewsComponent.builder()
                 .libsModule(new LibsModule(null))
                 .newsModule(new NewsModule(pNewsView, pOnItemClickListener))
+                .build();
+    }
+    public PostComponent getPostComponent(PostActivity pPostActivity){
+        return DaggerPostComponent.builder()
+                .libsModule(new LibsModule(null))
+                .postModule(new PostModule(pPostActivity))
                 .build();
     }
 }

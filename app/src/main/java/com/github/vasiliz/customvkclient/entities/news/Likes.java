@@ -1,8 +1,10 @@
-package com.github.vasiliz.customvkclient.entities;
+package com.github.vasiliz.customvkclient.entities.news;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Likes {
+import java.io.Serializable;
+
+public class Likes implements Serializable {
 
     @SerializedName("count")
     private long mCountLike;

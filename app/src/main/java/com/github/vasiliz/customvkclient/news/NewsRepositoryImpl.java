@@ -3,8 +3,8 @@ package com.github.vasiliz.customvkclient.news;
 import android.util.Log;
 
 import com.github.vasiliz.customvkclient.api.NewsApiClient;
-import com.github.vasiliz.customvkclient.entities.ResponseNews;
-import com.github.vasiliz.customvkclient.entities.StartResponse;
+import com.github.vasiliz.customvkclient.entities.news.ResponseNews;
+import com.github.vasiliz.customvkclient.entities.news.StartResponse;
 import com.github.vasiliz.customvkclient.lib.base.EventBus;
 import com.github.vasiliz.customvkclient.news.events.NewsEvent;
 
@@ -30,7 +30,6 @@ public class NewsRepositoryImpl implements NewsRepository {
 
             @Override
             public void onResponse(Call<StartResponse> call, Response<StartResponse> response) {
-                System.out.println(pToken);
                post(response.body().getResponseNews());
 
             }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CustomVkClient</string>
+    <string name="copy_link">Копировать ссылку</string>
 </resources>

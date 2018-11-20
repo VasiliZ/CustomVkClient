@@ -34,7 +34,7 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
-    public void getLoginToken(String response) {
+    public void execTask(String response) {
         if (mLoginView!=null){
             mLoginView.showProgress();
         }

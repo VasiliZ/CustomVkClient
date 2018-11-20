@@ -1,8 +1,10 @@
-package com.github.vasiliz.customvkclient.entities;
+package com.github.vasiliz.customvkclient.entities.news;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Views {
+import java.io.Serializable;
+
+public class Views implements Serializable {
     @SerializedName("views")
     private long mCountViews;
 

@@ -1,6 +1,6 @@
 package com.github.vasiliz.customvkclient.api;
 
-import com.github.vasiliz.customvkclient.entities.StartResponse;
+import com.github.vasiliz.customvkclient.entities.news.StartResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

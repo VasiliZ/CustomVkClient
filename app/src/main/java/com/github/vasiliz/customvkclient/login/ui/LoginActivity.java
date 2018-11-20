@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if (url.contains(URL_GET_ACCESS_TOKEN)) {
-                mLoginPresenter.getLoginToken(url);
+                mLoginPresenter.execTask(url);
             }
             return false;
         }

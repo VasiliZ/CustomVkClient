@@ -1,10 +1,11 @@
-package com.github.vasiliz.customvkclient.entities;
+package com.github.vasiliz.customvkclient.entities.news;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Items {
+public class Item implements Serializable {
     @SerializedName("type")
     private String mType;
     @SerializedName("source_id")
@@ -28,7 +29,7 @@ public class Items {
     @SerializedName("views")
     private Views mViews;
 
-    public Items() {
+    public Item() {
     }
 
     public String getType() {

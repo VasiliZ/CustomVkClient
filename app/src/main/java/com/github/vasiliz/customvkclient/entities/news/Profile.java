@@ -1,8 +1,10 @@
-package com.github.vasiliz.customvkclient.entities;
+package com.github.vasiliz.customvkclient.entities.news;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Profile {
+import java.io.Serializable;
+
+public class Profile implements Serializable {
     @SerializedName("id")
     private long mId;
     @SerializedName("first_name")

@@ -1,6 +1,6 @@
 package com.github.vasiliz.customvkclient.news.events;
 
-import com.github.vasiliz.customvkclient.entities.ResponseNews;
+import com.github.vasiliz.customvkclient.entities.news.ResponseNews;
 
 public class NewsEvent {
     private String pError;

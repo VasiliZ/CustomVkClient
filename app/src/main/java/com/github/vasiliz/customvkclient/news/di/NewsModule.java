@@ -1,9 +1,8 @@
 package com.github.vasiliz.customvkclient.news.di;
 
 import com.github.vasiliz.customvkclient.api.NewsApiClient;
-import com.github.vasiliz.customvkclient.entities.Items;
+import com.github.vasiliz.customvkclient.entities.news.Item;
 import com.github.vasiliz.customvkclient.lib.base.EventBus;
-import com.github.vasiliz.customvkclient.lib.base.ImageLoader;
 import com.github.vasiliz.customvkclient.news.NewsInteractor;
 import com.github.vasiliz.customvkclient.news.NewsInteractorImpl;
 import com.github.vasiliz.customvkclient.news.NewsPresenter;
@@ -64,8 +63,8 @@ public class NewsModule {
 
     @Singleton
     @Provides
-    NewsAdapter providesNewsAdapter(List<Items> pItemsList, OnItemClickListener pOnItemClickListener){
-        return new NewsAdapter(pItemsList, pOnItemClickListener);
+    NewsAdapter providesNewsAdapter(List<Item> pItemList, OnItemClickListener pOnItemClickListener){
+        return new NewsAdapter(pItemList, pOnItemClickListener);
     }
 
     @Singleton
@@ -76,7 +75,7 @@ public class NewsModule {
 
     @Singleton
     @Provides
-    List<Items> provideItemsList(){
+    List<Item> provideItemsList(){
         return new ArrayList<>();
     }
 

@@ -1,8 +1,11 @@
-package com.github.vasiliz.customvkclient.entities;
+package com.github.vasiliz.customvkclient.entities.news;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Photo {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Photo extends Attachment implements Serializable {
 
     @SerializedName("photo_604")
     private String mPhoto604;
@@ -86,5 +89,33 @@ public class Photo {
 
     public void setAccessPhotoKey(String pAccessPhotoKey) {
         mAccessPhotoKey = pAccessPhotoKey;
+    }
+
+    @Override
+    public boolean equals(Object pO) {
+        if (this == pO) {
+            return true;
+        }
+        if (pO == null || getClass() != pO.getClass()) {
+            return false;
+        }
+        if (!super.equals(pO)) {
+            return false;
+        }
+        Photo photo = (Photo) pO;
+        return mId == photo.mId &&
+                mUserId == photo.mUserId &&
+                mWidth == photo.mWidth &&
+                mHeight == photo.mHeight &&
+                Objects.equals(mPhoto604, photo.mPhoto604) &&
+                Objects.equals(mText, photo.mText) &&
+                Objects.equals(mPostId, photo.mPostId) &&
+                Objects.equals(mAccessPhotoKey, photo.mAccessPhotoKey);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), mPhoto604, mId, mUserId, mWidth, mHeight, mText, mPostId, mAccessPhotoKey);
     }
 }

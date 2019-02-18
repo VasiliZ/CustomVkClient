@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.vasiliz.customvkclient.R;
 import com.github.vasiliz.customvkclient.entities.news.Attachment;
@@ -39,12 +40,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageHolde
     public void onBindViewHolder(@NonNull ImageHolder pImageHolder, int pI) {
         Photo photo;
         if (!mPhotoList.isEmpty()) {
-            GlideApp.with((pImageHolder).mImageView).clear((pImageHolder).mImageView);
-            pImageHolder.mImageView.setImageDrawable(null);
-
             photo = (Photo) mPhotoList.get(pI);
-
-            //   pImageHolder.mTextView.setText("image");
             pImageHolder.mImageView.setVisibility(View.VISIBLE);
             GlideApp.with(pImageHolder.mImageView)
                     .load(photo.getPhoto604())
@@ -72,5 +68,6 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageHolde
             ButterKnife.bind(this, itemView);
         }
     }
+
 
 }

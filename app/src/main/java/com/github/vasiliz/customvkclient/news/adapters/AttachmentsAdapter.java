@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.github.vasiliz.customvkclient.R;
 import com.github.vasiliz.customvkclient.entities.news.Attachment;
 import com.github.vasiliz.customvkclient.entities.news.Audio;
@@ -17,6 +18,7 @@ import com.github.vasiliz.customvkclient.entities.news.Photo;
 import com.github.vasiliz.customvkclient.login.libs.GlideApp;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,10 +39,10 @@ public class AttachmentsAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull final ViewGroup pViewGroup, final int pViewType) {
         switch (pViewType) {
             case 1:
-                View view = LayoutInflater.from(pViewGroup.getContext()).inflate(R.layout.contents_attach, pViewGroup, false);
-                return new AttachmentsHolder(view, pViewGroup.getContext());
+                final View view = LayoutInflater.from(pViewGroup.getContext()).inflate(R.layout.contents_attach, pViewGroup, false);
+                return new AttachmentsPhotoHolder(view, pViewGroup.getContext());
             case 2:
-                View view1 = LayoutInflater.from(pViewGroup.getContext()).inflate(R.layout.audio_attachment, pViewGroup, false);
+                final View view1 = LayoutInflater.from(pViewGroup.getContext()).inflate(R.layout.audio_attachment, pViewGroup, false);
                 return new AudioAttachment(view1, pViewGroup.getContext());
 
         }
@@ -50,8 +52,8 @@ public class AttachmentsAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder pViewHolder, final int pI) {
         if (mAttachments.get(pI).get(0) instanceof Photo) {
-            GlideApp.with(((AttachmentsHolder) pViewHolder).mImageView).clear(((AttachmentsHolder) pViewHolder).mImageView);
-            ((AttachmentsHolder) pViewHolder).setPhoto(mAttachments.get(pI));
+            Glide.with(pViewHolder.itemView).clear(pViewHolder.itemView);
+            ((AttachmentsPhotoHolder) pViewHolder).setPhoto(mAttachments.get(pI));
         }
         if (mAttachments.get(pI).get(0) instanceof Audio) {
             ((AudioAttachment) pViewHolder).setAudio(mAttachments.get(pI));
@@ -59,7 +61,7 @@ public class AttachmentsAdapter extends RecyclerView.Adapter {
 
     }
 
-    public void setItems(List<List<Attachment>> pItems) {
+    public void setItems(final Collection<List<Attachment>> pItems) {
         mAttachments.clear();
         mAttachments.addAll(pItems);
         notifyDataSetChanged();
@@ -71,34 +73,31 @@ public class AttachmentsAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public int getItemViewType(int position) {
+    public int getItemViewType(final int position) {
         if (mAttachments.get(position).get(0) instanceof Photo) {
-            System.out.println(TYPE_PHOTO);
             return 1;
         }
         if (mAttachments.get(position).get(0) instanceof Audio) {
-            System.out.println(TYPE_AUDIO);
             return 2;
-        } else {
-            System.out.println(mAttachments.get(position).get(0).getTypeAttachments());
         }
         return -1;
     }
 
-    class AttachmentsHolder extends RecyclerView.ViewHolder {
+
+    class AttachmentsPhotoHolder extends RecyclerView.ViewHolder {
 
         private List<Attachment> mPhotos;
         private Context mContext;
 
         @BindView(R.id.type_attach)
         RecyclerView mAttachContent;
-        @BindView(R.id.fuck)
+        @BindView(R.id.text_view)
         TextView mTextView;
         @BindView(R.id.image_ska)
         ImageView mImageView;
         private ImagesAdapter mImagesAdapter;
 
-        public AttachmentsHolder(@NonNull final View itemView, final Context pContext) {
+        public AttachmentsPhotoHolder(@NonNull final View itemView, final Context pContext) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             mContext = pContext;
@@ -109,12 +108,12 @@ public class AttachmentsAdapter extends RecyclerView.Adapter {
             mImagesAdapter = new ImagesAdapter(mPhotos);
             mAttachContent.setLayoutManager(linearLayoutManager);
             mAttachContent.setAdapter(mImagesAdapter);
-
         }
 
-        public void setPhoto(final List<Attachment> pPhoto) {
+        public void setPhoto(final Collection<Attachment> pPhoto) {
             mPhotos.clear();
             mPhotos.addAll(pPhoto);
+            mImagesAdapter.notifyDataSetChanged();
         }
     }
 
@@ -124,19 +123,19 @@ public class AttachmentsAdapter extends RecyclerView.Adapter {
         RecyclerView mRecyclerView;
         private List<Attachment> mAttachments;
 
-        AudioAttachment(@NonNull final View itemView, Context pContext) {
+        AudioAttachment(@NonNull final View itemView, final Context pContext) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             mAttachments = new ArrayList<>();
             final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(pContext);
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            ListAudioAdapter listAudioAdapter = new ListAudioAdapter(mAttachments);
+            final ListAudioAdapter listAudioAdapter = new ListAudioAdapter(mAttachments);
             mRecyclerView.setLayoutManager(linearLayoutManager);
             mRecyclerView.setAdapter(listAudioAdapter);
 
         }
 
-        public void setAudio(List<Attachment> pAudio) {
+        public void setAudio(final Collection<Attachment> pAudio) {
             mAttachments.clear();
             mAttachments.addAll(pAudio);
 

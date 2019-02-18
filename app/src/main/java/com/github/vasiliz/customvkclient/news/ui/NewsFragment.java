@@ -29,6 +29,7 @@ import com.github.vasiliz.customvkclient.news.di.NewsComponent;
 import com.github.vasiliz.customvkclient.post.ui.PostActivity;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -58,7 +59,7 @@ public class NewsFragment extends Fragment implements NewsView, OnItemClickListe
         ButterKnife.bind(this, view);
         setUpInjection();
         setUpRecyclerView();
-        mSharedPreferences = getActivity().getSharedPreferences(Strings.APP_PREFERENCES, getActivity().MODE_PRIVATE);
+        mSharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences(Strings.APP_PREFERENCES, getActivity().MODE_PRIVATE);
         mNewsPresenter.getNews();
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
@@ -75,7 +76,7 @@ public class NewsFragment extends Fragment implements NewsView, OnItemClickListe
             final CustomVkClient customVkClient = (CustomVkClient) getActivity().getApplication();
             final NewsComponent newsComponent = customVkClient.getNewsComponent(this, this);
             newsComponent.inject(this);
-        } catch (NullPointerException pE) {
+        } catch (final NullPointerException pE) {
             pE.getLocalizedMessage();
         }
     }
@@ -133,7 +134,7 @@ public class NewsFragment extends Fragment implements NewsView, OnItemClickListe
     }
 
     @Override
-    public void onItemClick(Item pItem) {
+    public void onItemClick(final Item pItem) {
         setDataToSelectPostFromComment(pItem);
     }
 
@@ -155,11 +156,11 @@ public class NewsFragment extends Fragment implements NewsView, OnItemClickListe
         super.onResume();
     }
 
-    private void setDataToSelectPostFromComment(Item pItem) {
+    private void setDataToSelectPostFromComment(final Item pItem) {
         if (getActivity() != null) {
-            Intent intent = new Intent(getContext(), PostActivity.class);
-            int postId = pItem.getPostId();
-            int sourseId = pItem.getSourseId();
+            final Intent intent = new Intent(getContext(), PostActivity.class);
+            final int postId = pItem.getPostId();
+            final int sourseId = pItem.getSourseId();
             intent.putExtra(Strings.POST_ID, postId);
             intent.putExtra(Strings.SOURSE_ID, sourseId);
             startActivity(intent);

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.github.vasiliz.customvkclient.R;
 import com.github.vasiliz.customvkclient.entities.news.ArraysItems;
 import com.github.vasiliz.customvkclient.entities.news.Attachment;
@@ -51,7 +52,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final NewsHolder pNewsHolder, final int pI) {
-        Item item = mNewItems.get(pI);
+        final Item item = mNewItems.get(pI);
         try {
             mArraysItems = new ArraysItems();
             Log.d(TAG, item.getType());
@@ -89,6 +90,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
                 pNewsHolder.mTextNews.setVisibility(View.GONE);
             }
 
+
             //comments
             Log.d(TAG, String.valueOf(item.getComments().getCanPost()));
             if (item.getComments().getCanPost() == 0) {
@@ -100,22 +102,23 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
             pNewsHolder.mCountRepost.setText(String.valueOf(item.getReposts().getCountReposts()));
             pNewsHolder.setOnClickListener(item);
             //attachment content
-            if (item.getAttachments() != null) {
-                if (!item.getAttachments().isEmpty()) {
-                    for (int i = 0; i < item.getAttachments().size(); i++) {
-                        mArraysItems.setItem(item.getAttachments().get(i));
-                    }
-                    Log.d(TAG + "1", String.valueOf(mArraysItems.getAttach().size()));
 
-
-                    pNewsHolder.mAttachmentsContainer.setVisibility(View.VISIBLE);
-                    mArraysItems.endOnStruct();
-                    pNewsHolder.setItems(mArraysItems.getAttach());
-
+            if (!item.getAttachments().isEmpty()) {
+                for (int i = 0; i < item.getAttachments().size(); i++) {
+                    mArraysItems.setItem(item.getAttachments().get(i));
                 }
+                Log.d(TAG + "1", String.valueOf(mArraysItems.getAttach().size()));
+                if (!isVisible(pNewsHolder.mAttachmentsContainer)){
+                    pNewsHolder.mAttachmentsContainer.setVisibility(View.VISIBLE);
+                }
+                mArraysItems.endOnStruct();
+                pNewsHolder.setItems(mArraysItems.getAttach());
 
             } else {
-                pNewsHolder.mAttachmentsContainer.setVisibility(View.GONE);
+                if (isVisible(pNewsHolder.mAttachmentsContainer)){
+                    pNewsHolder.mAttachmentsContainer.setAdapter(null);
+                    pNewsHolder.mAttachmentsContainer.setVisibility(View.GONE);
+                }
             }
         } catch (final NullPointerException pE) {
             pE.getLocalizedMessage();
@@ -153,6 +156,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
             }
         }
         return null;
+    }
+    private boolean isVisible(View view){
+        return view.getVisibility()==View.VISIBLE;
     }
 
     class NewsHolder extends RecyclerView.ViewHolder {
@@ -214,7 +220,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsHolder> {
     }
 
     @Override
-    public void onViewRecycled(@NonNull final NewsHolder holder) {
-        super.onViewRecycled(holder);
+    public void onViewDetachedFromWindow(@NonNull NewsHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        holder.mAttachmentsContainer.setVisibility(View.GONE);
+
     }
+
+
 }
